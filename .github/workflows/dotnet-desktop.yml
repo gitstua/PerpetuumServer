@@ -91,16 +91,15 @@ jobs:
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
       run: |
-        SET EnableNuGetPackageRestore=true
         msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-        dir /s
+        # nuget restore
       env:
         Configuration: ${{ matrix.configuration }}
     # Enable tmate debugging of manually-triggered workflows if the input option was provided
     # this allows us to debug the file paths
     - name: Setup tmate session
       uses: mxschmitt/action-tmate@v3
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && always()}}
     # Decode the base 64 encoded pfx and save the Signing_Certificate
 #    - name: Decode the pfx
 #      run: |
