@@ -56,7 +56,8 @@ jobs:
 
     strategy:
       matrix:
-        configuration: [Debug, Release]
+#        configuration: [Debug, Release]
+        configuration: [Debug]
 
     runs-on: windows-2019  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -89,7 +90,10 @@ jobs:
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      run: |
+        SET EnableNuGetPackageRestore=true
+        msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+        dir /s
       env:
         Configuration: ${{ matrix.configuration }}
     # Enable tmate debugging of manually-triggered workflows if the input option was provided
